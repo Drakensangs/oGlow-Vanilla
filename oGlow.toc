@@ -1,0 +1,17 @@
+## Interface: 11200
+## Title: oGlow
+## Author: Original addon: Haste; Vanilla 1.12.1 version: Drakensangs
+## Version: 1.13
+## Notes: Make your shiny items... glow in the dark!
+
+core\glow.lua
+core\char.lua
+core\inspect.lua
+core\mail.lua
+core\bags.lua
+core\bank.lua
+core\merchant.lua
+core\trade.lua
+core\craft.lua
+core\tradeskill.lua
+core\loot.lua
