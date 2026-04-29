@@ -10,7 +10,7 @@ So all in all, this version of oGlow applies its colored rarity borders to item 
 
 # 🔌 **Addon Compatibility**
 
-oGlow should work with most other addons. Only "issue" that comes to mind is related to bag addons. Most bag addons nowadays come with their rarity borders for items and oGlow won't interfere with that, it will just handle adding its rarity borders to all other remaining frames.
+oGlow should work with most other addons. Only "issue" that comes to mind is related to bag addons. Most bag addons nowadays come with their own rarity borders for items and oGlow won't interfere with that, it will just handle adding its rarity borders to all other remaining frames.
 
 # 👨‍💻 **Authors**
 
