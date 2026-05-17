@@ -46,9 +46,7 @@ local update = function()
 		q = GetInventoryItemQuality("player", i)
 		--DEFAULT_CHAT_FRAME:AddMessage(q);
 		self = getglobal("Character"..key.."Slot")
-		if(oGlow.preventCharacter) then
-			q = 0
-		elseif(GetInventoryItemBroken("player", i)) then
+		if(GetInventoryItemBroken("player", i)) then
 			q = 100
 		elseif(index and GetInventoryAlertStatus(index) == 3) then
 			q = 99
@@ -60,8 +58,26 @@ end
 
 local hook = CreateFrame"Frame"
 hook:SetParent"CharacterFrame"
-hook:SetScript("OnShow", update)
-hook:SetScript("OnEvent", function() if(event == "UNIT_INVENTORY_CHANGED") then update() end end)
+hook:SetScript("OnShow", function() if not oGlow.preventCharacter then update() end end)
+hook:SetScript("OnEvent", function() if(event == "UNIT_INVENTORY_CHANGED") and not oGlow.preventCharacter then update() end end)
 hook:RegisterEvent"UNIT_INVENTORY_CHANGED"
 
+local function clearCharacter()
+	local slots = {
+		"AmmoSlot","HeadSlot","NeckSlot","ShoulderSlot","ShirtSlot","ChestSlot",
+		"WaistSlot","LegsSlot","FeetSlot","WristSlot","HandsSlot",
+		"Finger0Slot","Finger1Slot","Trinket0Slot","Trinket1Slot","BackSlot",
+		"MainHandSlot","SecondaryHandSlot","RangedSlot","TabardSlot",
+	}
+	for _, name in pairs(slots) do
+		local s = getglobal("Character" .. name)
+		if s and s.bc then s.bc:Hide() end
+	end
+end
+
 oGlow.updateCharacter = update
+oGlow.clearCharacter  = clearCharacter
+oGlow:RegisterRefresh(function()
+	if oGlow.preventCharacter then return end
+	if CharacterFrame:IsShown() then update() end
+end)

@@ -32,7 +32,7 @@ end
 local origLootFrame_Update = LootFrame_Update
 LootFrame_Update = function()
 	origLootFrame_Update()
-	update()
+	if not oGlow.preventLoot then update() end
 end
 
 local hook = CreateFrame("Frame")
@@ -46,4 +46,16 @@ hook:SetScript("OnHide", function()
 	end
 end)
 
+local function clearLoot()
+	for i = 1, LOOTFRAME_NUMBUTTONS do
+		local button = G["LootButton" .. i]
+		if button and button.bc then button.bc:Hide() end
+	end
+end
+
 oGlow.updateLoot = update
+oGlow.clearLoot  = clearLoot
+oGlow:RegisterRefresh(function()
+	if oGlow.preventLoot then return end
+	if LootFrame:IsShown() then update() end
+end)

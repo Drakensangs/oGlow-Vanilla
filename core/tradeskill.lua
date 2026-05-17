@@ -53,11 +53,11 @@ hook:SetScript("OnEvent", function()
 		hook:UnregisterEvent("ADDON_LOADED")
 	elseif event == "TRADE_SKILL_SHOW" then
 		lastSelection = nil
-		update()
-		hook:SetScript("OnUpdate", onUpdate)
+		if not oGlow.preventTradeskill then update() end
+		hook:SetScript("OnUpdate", function() if not oGlow.preventTradeskill then onUpdate() end end)
 	elseif event == "TRADE_SKILL_UPDATE" then
 		lastSelection = nil
-		update()
+		if not oGlow.preventTradeskill then update() end
 	elseif event == "TRADE_SKILL_CLOSE" then
 		lastSelection = nil
 		hook:SetScript("OnUpdate", nil)
@@ -68,4 +68,18 @@ hook:RegisterEvent("TRADE_SKILL_SHOW")
 hook:RegisterEvent("TRADE_SKILL_UPDATE")
 hook:RegisterEvent("TRADE_SKILL_CLOSE")
 
+local function clearTradeskill()
+	local icon = G["TradeSkillSkillIcon"]
+	if icon and icon.bc then icon.bc:Hide() end
+	for i = 1, 8 do
+		local frame = G["TradeSkillReagent" .. i]
+		if frame and frame.bc then frame.bc:Hide() end
+	end
+end
+
 oGlow.updateTradeskill = update
+oGlow.clearTradeskill  = clearTradeskill
+oGlow:RegisterRefresh(function()
+	if oGlow.preventTradeskill then return end
+	if TradeSkillFrame and TradeSkillFrame:IsShown() then update() end
+end)

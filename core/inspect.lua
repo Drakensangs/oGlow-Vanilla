@@ -51,7 +51,7 @@ hook:RegisterEvent"VARIABLES_LOADED";
 
 hook:SetScript("OnUpdate",  function()
 	if(IsAddOnLoaded("Blizzard_InspectUI")) and (not loaded) then
-		this:SetScript("OnShow", update)
+		this:SetScript("OnShow", function() if not oGlow.preventInspect then update() end end)
 		this:SetParent"InspectFrame"
 
 		this:RegisterEvent"PLAYER_TARGET_CHANGED"
@@ -60,4 +60,23 @@ hook:SetScript("OnUpdate",  function()
 	end
 end);
 
+local inspectSlots = {
+	"HeadSlot","NeckSlot","ShoulderSlot","ShirtSlot","ChestSlot",
+	"WaistSlot","LegsSlot","FeetSlot","WristSlot","HandsSlot",
+	"Finger0Slot","Finger1Slot","Trinket0Slot","Trinket1Slot","BackSlot",
+	"MainHandSlot","SecondaryHandSlot","RangedSlot","TabardSlot",
+}
+
+local function clearInspect()
+	for _, name in pairs(inspectSlots) do
+		local s = getglobal("Inspect" .. name)
+		if s and s.bc then s.bc:Hide() end
+	end
+end
+
 oGlow.updateInspect = update
+oGlow.clearInspect  = clearInspect
+oGlow:RegisterRefresh(function()
+	if oGlow.preventInspect then return end
+	if InspectFrame and InspectFrame:IsShown() then update() end
+end)

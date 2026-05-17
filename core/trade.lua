@@ -40,16 +40,16 @@ end
 local hook = CreateFrame("Frame")
 hook:SetScript("OnEvent", function()
 	if event == "TRADE_SHOW" or event == "TRADE_UPDATE" then
-		update()
+		if not oGlow.preventTrade then update() end
 	elseif event == "TRADE_PLAYER_ITEM_CHANGED" then
-		local slot = getglobal("TradePlayerItem" .. arg1 .. "ItemButton")
-		if slot then
-			setQuality(slot, GetTradePlayerItemLink(arg1))
+		if not oGlow.preventTrade then
+			local slot = getglobal("TradePlayerItem" .. arg1 .. "ItemButton")
+			if slot then setQuality(slot, GetTradePlayerItemLink(arg1)) end
 		end
 	elseif event == "TRADE_TARGET_ITEM_CHANGED" then
-		local slot = getglobal("TradeRecipientItem" .. arg1 .. "ItemButton")
-		if slot then
-			setQuality(slot, GetTradeTargetItemLink(arg1))
+		if not oGlow.preventTrade then
+			local slot = getglobal("TradeRecipientItem" .. arg1 .. "ItemButton")
+			if slot then setQuality(slot, GetTradeTargetItemLink(arg1)) end
 		end
 	end
 end)
@@ -58,4 +58,18 @@ hook:RegisterEvent("TRADE_UPDATE")
 hook:RegisterEvent("TRADE_PLAYER_ITEM_CHANGED")
 hook:RegisterEvent("TRADE_TARGET_ITEM_CHANGED")
 
+local function clearTrade()
+	for i = 1, 7 do
+		local s = getglobal("TradePlayerItem" .. i .. "ItemButton")
+		if s and s.bc then s.bc:Hide() end
+		local r = getglobal("TradeRecipientItem" .. i .. "ItemButton")
+		if r and r.bc then r.bc:Hide() end
+	end
+end
+
 oGlow.updateTrade = update
+oGlow.clearTrade  = clearTrade
+oGlow:RegisterRefresh(function()
+	if oGlow.preventTrade then return end
+	if TradeFrame and TradeFrame:IsShown() then update() end
+end)

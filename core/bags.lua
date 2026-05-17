@@ -34,11 +34,11 @@ for i = 1, NUM_CONTAINER_FRAMES do
 		hook:SetParent(bagFrame)
 
 		hook:SetScript("OnShow", function()
-			updateBag(bagFrame)
+			if not oGlow.preventBags then updateBag(bagFrame) end
 		end)
 
 		hook:SetScript("OnEvent", function()
-			if event == "BAG_UPDATE" and bagFrame:IsShown() then
+			if event == "BAG_UPDATE" and bagFrame:IsShown() and not oGlow.preventBags then
 				updateBag(bagFrame)
 			end
 		end)
@@ -47,4 +47,35 @@ for i = 1, NUM_CONTAINER_FRAMES do
 	end
 end
 
-oGlow.updateBags = updateBag
+local function clearBags()
+	for i = 1, NUM_CONTAINER_FRAMES do
+		local bagFrame = getglobal("ContainerFrame" .. i)
+		if bagFrame then
+			local size = GetContainerNumSlots(bagFrame:GetID())
+			if size and size > 0 then
+				local name = bagFrame:GetName()
+				for j = 1, size do
+					local slot = getglobal(name .. "Item" .. j)
+					if slot and slot.bc then slot.bc:Hide() end
+				end
+			end
+		end
+	end
+end
+
+local function updateBags()
+	for i = 1, NUM_CONTAINER_FRAMES do
+		local bagFrame = getglobal("ContainerFrame" .. i)
+		if bagFrame and bagFrame:IsShown() then updateBag(bagFrame) end
+	end
+end
+
+oGlow.updateBags   = updateBags
+oGlow.clearBags    = clearBags
+oGlow:RegisterRefresh(function()
+	if oGlow.preventBags then return end
+	for i = 1, NUM_CONTAINER_FRAMES do
+		local bagFrame = getglobal("ContainerFrame" .. i)
+		if bagFrame and bagFrame:IsShown() then updateBag(bagFrame) end
+	end
+end)

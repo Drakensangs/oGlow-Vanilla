@@ -52,11 +52,11 @@ hook:SetScript("OnEvent", function()
 		hook:UnregisterEvent("ADDON_LOADED")
 	elseif event == "CRAFT_SHOW" then
 		lastSelection = nil
-		update()
-		hook:SetScript("OnUpdate", onUpdate)
+		if not oGlow.preventCraft then update() end
+		hook:SetScript("OnUpdate", function() if not oGlow.preventCraft then onUpdate() end end)
 	elseif event == "CRAFT_UPDATE" then
 		lastSelection = nil
-		update()
+		if not oGlow.preventCraft then update() end
 	elseif event == "CRAFT_CLOSE" then
 		lastSelection = nil
 		hook:SetScript("OnUpdate", nil)
@@ -67,4 +67,18 @@ hook:RegisterEvent("CRAFT_SHOW")
 hook:RegisterEvent("CRAFT_UPDATE")
 hook:RegisterEvent("CRAFT_CLOSE")
 
+local function clearCraft()
+	local icon = G["CraftIcon"]
+	if icon and icon.bc then icon.bc:Hide() end
+	for i = 1, 8 do
+		local frame = G["CraftReagent" .. i]
+		if frame and frame.bc then frame.bc:Hide() end
+	end
+end
+
 oGlow.updateCraft = update
+oGlow.clearCraft  = clearCraft
+oGlow:RegisterRefresh(function()
+	if oGlow.preventCraft then return end
+	if CraftFrame and CraftFrame:IsShown() then update() end
+end)

@@ -107,7 +107,7 @@ end
 local origInboxFrame_Update = InboxFrame_Update
 InboxFrame_Update = function()
 	origInboxFrame_Update()
-	updateMail()
+	if not oGlow.preventMail then updateMail() end
 end
 
 -- Handle MAIL_CLOSED to clear borders when the mailbox is dismissed.
@@ -117,4 +117,11 @@ addon:SetScript("OnEvent", function()
 	if event == "MAIL_CLOSED" then
 		clearAll()
 	end
+end)
+
+oGlow.updateMail = updateMail
+oGlow.clearMail  = clearAll
+oGlow:RegisterRefresh(function()
+	if oGlow.preventMail then return end
+	if MailFrame and MailFrame:IsShown() then updateMail() end
 end)

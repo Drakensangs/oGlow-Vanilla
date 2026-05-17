@@ -115,7 +115,7 @@ end
 local origMerchantFrame_Update = MerchantFrame_Update
 MerchantFrame_Update = function()
 	origMerchantFrame_Update()
-	update()
+	if not oGlow.preventMerchant then update() else clearAll() end
 end
 
 local hook = CreateFrame("Frame")
@@ -123,9 +123,14 @@ hook:SetParent(MerchantFrame)
 hook:SetScript("OnHide", clearAll)
 hook:SetScript("OnEvent", function()
 	if event == "MERCHANT_SHOW" then
-		update()
+		if not oGlow.preventMerchant then update() else clearAll() end
 	end
 end)
 hook:RegisterEvent("MERCHANT_SHOW")
 
 oGlow.updateMerchant = update
+oGlow.clearMerchant  = clearAll
+oGlow:RegisterRefresh(function()
+	if oGlow.preventMerchant then return end
+	if MerchantFrame:IsShown() then update() end
+end)
