@@ -2,7 +2,9 @@
 
 oGlow is an addon that adds colored rarity borders to item icons on various frames across the UI. 
 
-It is mainly known for being a The Burning Crusade and Wrath of the Lich King addon. There is a version that works on vanilla thanks to McPewPew, but its bags, merchant, trade, tradeskill features are nonfunctional. This version of the addon restores functionality to the aforementioned frames and adds support for the inbox, merchant buyback slot, buybacktab and loot frames. 
+It is mainly known for being a The Burning Crusade and Wrath of the Lich King addon. There is a version that works on vanilla thanks to McPewPew, but its bags, merchant, trade, tradeskill features are nonfunctional. This version of the addon restores functionality to the aforementioned frames and adds support for the inbox, merchant buyback slot, buybacktab and loot frames.
+
+The options menu, which is brought up by typing **/oglow** allows to enable/disable what frames the addon applies its colored rarity borders to, change what rarity borders are applied from and set custom rarity colors.
 
 While there are no Artifact items that the player can normally obtain in vanilla WoW, this version of oGlow supports them as well. Might be useful if your server makes use of such items.
 
@@ -29,5 +31,6 @@ Vanilla 1.12.1 version: Drakensangs
 <img width="524" height="632" alt="oglowbank" src="https://github.com/user-attachments/assets/f606df9d-3b8f-4f1e-9ae7-865550146987" />
 <img width="530" height="692" alt="oglowtrade" src="https://github.com/user-attachments/assets/87fe94ba-431a-4eb5-a211-f19d4f7695e9" />
 <img width="536" height="731" alt="oglowmerchant" src="https://github.com/user-attachments/assets/505e4090-2b59-473e-a317-78f69ee81bcd" />
+<img width="509" height="600" alt="oGlow options" src="https://github.com/user-attachments/assets/896868ad-2e0d-4504-9d39-6f43ceae3d7b" />
+<img width="282" height="360" alt="oGlow custom colors" src="https://github.com/user-attachments/assets/41f53d07-939d-40bd-8d03-c229760b1fe1" />
 <img width="1090" height="712" alt="oglowmail" src="https://github.com/user-attachments/assets/80000e7d-71c9-46fd-9668-b3c8ef37ad63" />
-
