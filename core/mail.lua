@@ -29,6 +29,11 @@ end
 -- Returns the item quality (0-5) for the given inbox mail index, or nil if
 -- the mail has no item or the quality cannot be determined.
 local function getInboxItemQuality(mailIndex)
+	local _, _, _, _, _, _, _, hasItem = GetInboxHeaderInfo(mailIndex)
+	if not hasItem or hasItem == 0 then
+		return nil
+	end
+
 	scanner:SetOwner(UIParent, "ANCHOR_NONE")
 	scanner:ClearLines()
 	scanner:SetInboxItem(mailIndex, 1)
