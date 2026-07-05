@@ -2,7 +2,7 @@
 
 oGlow is an addon that adds colored rarity borders to item icons on various frames across the UI. 
 
-It is mainly known for being a The Burning Crusade and Wrath of the Lich King addon. There is a version that works on vanilla thanks to McPewPew, but its bags, merchant, trade, tradeskill features are nonfunctional. This version of the addon restores functionality to the aforementioned frames and adds support for the inbox, merchant buyback slot, buybacktab, loot and keyring frames.
+It is mainly known for being a The Burning Crusade and Wrath of the Lich King addon. There is a version that works on vanilla thanks to McPewPew, but its bags, merchant, trade, tradeskill features are nonfunctional. This version of the addon restores functionality to the aforementioned frames and adds support for the inbox, merchant buyback slot, buybacktab and loot frames.
 
 The options menu, which is brought up by typing **/oglow** allows to enable/disable what frames the addon applies its colored rarity borders to, change what rarity borders are applied from and set custom rarity colors.
 
