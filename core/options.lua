@@ -7,6 +7,7 @@ local PIPES = {
 	{ key = "Inspect",    label = "Inspect frame"    },
 	{ key = "Bags",       label = "Bag frames"       },
 	{ key = "Bank",       label = "Bank frame"       },
+	{ key = "Keyring",    label = "Keyring frame"    },
 	{ key = "Merchant",   label = "Merchant frame"   },
 	{ key = "Trade",      label = "Trade frame"      },
 	{ key = "Tradeskill", label = "Tradeskill frame" },

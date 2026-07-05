@@ -5,28 +5,33 @@ local oGlow = oGlow
 -- Containers
 local GetContainerItemLink = GetContainerItemLink
 
--- Update a single container bag frame
--- Button indices run opposite to container slot indices (button 1 = slot N, button N = slot 1)
+local MAX_CONTAINER_ITEMS = 36
+
 local function updateBag(bagFrame)
-	local bagID = bagFrame:GetID()
-	local size = GetContainerNumSlots(bagID)
+	if oGlow.preventBags then return end
+
+	local size = bagFrame.size
 	if not size or size == 0 then return end
-	local name = bagFrame:GetName()
+
+	local bagID = bagFrame:GetID()
+	local name  = bagFrame:GetName()
+
+	for i = 1, MAX_CONTAINER_ITEMS do
+		local btn = getglobal(name .. "Item" .. i)
+		if btn and btn.bc then btn.bc:Hide() end
+	end
+
 	for i = 1, size do
-		local bid = size - i + 1
-		local slot = getglobal(name .. "Item" .. bid)
-		local link = GetContainerItemLink(bagID, i)
-		if slot then
+		local btn = getglobal(name .. "Item" .. i)
+		if btn then
+			local link = GetContainerItemLink(bagID, size - i + 1)
 			if link then
-				oGlow(slot, getQuality(link))
-			elseif slot.bc then
-				slot.bc:Hide()
+				oGlow(btn, getQuality(link))
 			end
 		end
 	end
 end
 
--- Hook into each ContainerFrame using OnShow/OnEvent
 for i = 1, NUM_CONTAINER_FRAMES do
 	local bagFrame = getglobal("ContainerFrame" .. i)
 	if bagFrame then
@@ -34,12 +39,14 @@ for i = 1, NUM_CONTAINER_FRAMES do
 		hook:SetParent(bagFrame)
 
 		hook:SetScript("OnShow", function()
+			if bagFrame:GetID() == -2 then return end
 			if not oGlow.preventBags then updateBag(bagFrame) end
 		end)
 
 		hook:SetScript("OnEvent", function()
-			if event == "BAG_UPDATE" and bagFrame:IsShown() and not oGlow.preventBags then
-				updateBag(bagFrame)
+			if event == "BAG_UPDATE" and bagFrame:IsShown() then
+				if bagFrame:GetID() == -2 then return end
+				if not oGlow.preventBags then updateBag(bagFrame) end
 			end
 		end)
 
@@ -50,14 +57,11 @@ end
 local function clearBags()
 	for i = 1, NUM_CONTAINER_FRAMES do
 		local bagFrame = getglobal("ContainerFrame" .. i)
-		if bagFrame then
-			local size = GetContainerNumSlots(bagFrame:GetID())
-			if size and size > 0 then
-				local name = bagFrame:GetName()
-				for j = 1, size do
-					local slot = getglobal(name .. "Item" .. j)
-					if slot and slot.bc then slot.bc:Hide() end
-				end
+		if bagFrame and bagFrame:GetID() ~= -2 then
+			local name = bagFrame:GetName()
+			for j = 1, MAX_CONTAINER_ITEMS do
+				local btn = getglobal(name .. "Item" .. j)
+				if btn and btn.bc then btn.bc:Hide() end
 			end
 		end
 	end
@@ -66,16 +70,22 @@ end
 local function updateBags()
 	for i = 1, NUM_CONTAINER_FRAMES do
 		local bagFrame = getglobal("ContainerFrame" .. i)
-		if bagFrame and bagFrame:IsShown() then updateBag(bagFrame) end
+		if bagFrame and bagFrame:IsShown() and bagFrame:GetID() ~= -2 then
+			updateBag(bagFrame)
+		end
 	end
 end
 
-oGlow.updateBags   = updateBags
-oGlow.clearBags    = clearBags
+oGlow.updateBag  = updateBag
+oGlow.updateBags = updateBags
+oGlow.clearBags  = clearBags
+
 oGlow:RegisterRefresh(function()
 	if oGlow.preventBags then return end
 	for i = 1, NUM_CONTAINER_FRAMES do
 		local bagFrame = getglobal("ContainerFrame" .. i)
-		if bagFrame and bagFrame:IsShown() then updateBag(bagFrame) end
+		if bagFrame and bagFrame:IsShown() and bagFrame:GetID() ~= -2 then
+			updateBag(bagFrame)
+		end
 	end
 end)
