@@ -83,3 +83,60 @@ oGlow:RegisterRefresh(function()
 	if oGlow.preventTradeskill then return end
 	if TradeSkillFrame and TradeSkillFrame:IsShown() then update() end
 end)
+
+-- ClassicAPI compatibility
+local function capiQuality(itemLink)
+	if not itemLink then return end
+	local q = getQuality(itemLink)
+	if q then return q end
+	-- itemLink may be a raw "item:ID:0:0:0" string without color encoding;
+	-- extract the ID and ask GetItemInfo for the quality directly.
+	local itemID = tonumber(string.match(itemLink, "item:(%d+)"))
+	if itemID then
+		local _, _, quality = GetItemInfo(itemID)
+		return quality
+	end
+end
+
+local function capiUpdate(f)
+	local prodIcon = f.prodIcon
+	if prodIcon then
+		local q = capiQuality(prodIcon.itemLink)
+		if q then
+			oGlow(prodIcon, q)
+		elseif prodIcon.bc then
+			prodIcon.bc:Hide()
+		end
+	end
+	local reagents = f.reagents or {}
+	for i = 1, table.getn(reagents) do
+		local btn = reagents[i]
+		if btn and btn:IsShown() then
+			local q = capiQuality(btn.itemLink)
+			if q then
+				oGlow(btn, q)
+			elseif btn.bc then
+				btn.bc:Hide()
+			end
+		end
+	end
+end
+
+hooksecurefunc("SetItemRef", function(link)
+	if type(link) ~= "string" or string.sub(link, 1, 6) ~= "trade:" then return end
+	local f = getglobal("ClassicAPITradeSkillLinkFrame")
+	if not f then return end
+	if not f._oGlowHooked then
+		f._oGlowHooked = true
+		hooksecurefunc(f, "RenderDetail", function(self)
+			if not oGlow.preventTradeskill then capiUpdate(self) end
+		end)
+	end
+	if not oGlow.preventTradeskill then capiUpdate(f) end
+end)
+
+oGlow:RegisterRefresh(function()
+	if oGlow.preventTradeskill then return end
+	local f = getglobal("ClassicAPITradeSkillLinkFrame")
+	if f and f:IsShown() then capiUpdate(f) end
+end)
